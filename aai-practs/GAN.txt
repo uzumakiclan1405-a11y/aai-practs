@@ -1,0 +1,33 @@
+GAN
+#pip install tensorflow
+
+
+import tensorflow as tf
+from tensorflow.keras import layers
+
+G = tf.keras.Sequential([
+    layers.Input(shape=(100,)),
+    layers.Dense(128, activation="relu"),
+    layers.Dense(784, activation="sigmoid"),
+    layers.Reshape((28, 28))
+])
+
+D = tf.keras.Sequential([
+    layers.Input(shape=(28, 28)),
+    layers.Flatten(),
+    layers.Dense(128, activation="relu"),
+    layers.Dense(1, activation="sigmoid")
+])
+
+D.compile(optimizer="adam", loss="binary_crossentropy")
+
+z = tf.random.normal((1, 100))
+fake_img = G(z)
+print(fake_img.shape)
+
+import matplotlib.pyplot as plt
+img = fake_img[0].numpy()
+plt.imshow(img, cmap="gray")
+plt.axis("off")
+plt.show()
+

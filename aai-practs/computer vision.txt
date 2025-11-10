@@ -1,0 +1,10 @@
+computer vision
+#py -3.10 -m pip install ultralytics
+
+from ultralytics import YOLO
+
+model = YOLO('yolov8n.pt')
+results = model('D:/PracPy/car.jpg')   # <-- replace only this path to your image
+
+for r in results:
+    r.show()

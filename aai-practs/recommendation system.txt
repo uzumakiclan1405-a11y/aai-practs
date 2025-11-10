@@ -1,0 +1,18 @@
+recommendation system using collaborative or deep learning
+#pip install scikit-learn
+
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+ratings = np.array([
+    [5, 3, 0, 1],
+    [4, 0, 0, 1],
+    [1, 1, 0, 5],
+    [0, 0, 5, 4],
+])
+
+similarity = cosine_similarity(ratings)
+user = 0
+scores = similarity[user] @ ratings / similarity[user].sum()
+recommend = np.argsort(-scores)
+print("Recomended item indices:", recommend)

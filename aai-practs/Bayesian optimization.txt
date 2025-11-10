@@ -1,0 +1,23 @@
+Bayesian optimization
+#pip install scikit-optimize scikit-learn numpy
+
+from skopt import gp_minimize
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.datasets import load_iris
+import numpy as np
+
+X, y = load_iris(return_X_y=True)
+
+def objective(params):
+    n_estimators, max_depth = params
+    model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
+    return -np.mean(cross_val_score(model, X, y, cv=3))
+
+search = gp_minimize(objective,
+                     [(10, 200), (2, 10)],
+                     n_calls=10, random_state=0)
+
+print("Best parameters:", search.x)
+print("Best score:", -search.fun)
+

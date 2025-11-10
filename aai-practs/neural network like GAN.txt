@@ -1,0 +1,44 @@
+neural network like GAN
+#pip install tensorflow numpy matplotlib
+
+
+import numpy as np
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Flatten, Reshape, Input
+from tensorflow.keras.optimizers import Adam
+import matplotlib.pyplot as plt
+
+(X_train, _), _ = mnist.load_data()
+X_train = (X_train / 127.5 - 1).reshape(-1, 28*28)
+
+G = Sequential([
+    Input(shape=(100,)),
+    Dense(128, activation='relu'),
+    Dense(784, activation='tanh')
+])
+
+D = Sequential([
+    Input(shape=(784,)),
+    Dense(128, activation='relu'),
+    Dense(1, activation='sigmoid')
+])
+
+D.compile(loss='binary_crossentropy', optimizer=Adam())
+
+z = Input(shape=(100,))
+D.trainable = False
+gan = Model(z, D(G(z)))
+gan.compile(loss='binary_crossentropy', optimizer=Adam())
+
+noise = np.random.normal(0,1,(32,100))
+gen_imgs = G.predict(noise)
+real_imgs = X_train[:32]
+
+D.train_on_batch(real_imgs, np.ones((32,1)))
+D.train_on_batch(gen_imgs, np.zeros((32,1)))
+gan.train_on_batch(noise, np.ones((32,1)))
+
+print("Generated images shape:", gen_imgs.shape)
+plt.imshow(gen_imgs[0].reshape(28,28), cmap='gray')
+plt.show()

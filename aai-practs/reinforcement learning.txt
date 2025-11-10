@@ -1,0 +1,22 @@
+reinforcement learning
+#pip install numpy
+
+import numpy as np
+
+states, actions = 4, 2
+Q = np.zeros((states, actions))
+rewards = [0, 0, 0, 10]
+
+alpha, gamma, episodes = 0.1, 0.9, 50
+
+for _ in range(episodes):
+    state = 0
+    while state != 3:
+        action = np.random.choice(actions)
+        next_state = state + 1 if action == 1 else max(0, state - 1)
+        reward = rewards[next_state]
+        Q[state, action] += alpha * (reward + gamma * np.max(Q[next_state]) - Q[state, action])
+        state = next_state
+
+print("Learned Q-Table:\n", Q)
+print("Best action per state:", np.argmax(Q, axis=1))

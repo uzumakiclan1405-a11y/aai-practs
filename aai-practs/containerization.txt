@@ -1,0 +1,20 @@
+containerization
+#pip install scikit-learn joblib numpy
+
+from sklearn.datasets import load_iris
+from sklearn.ensemble import RandomForestClassifier
+import joblib
+
+X, y = load_iris(return_X_y=True)
+
+model = RandomForestClassifier()
+model.fit(X, y)
+
+joblib.dump(model, "iris_model.pkl")
+
+loaded_model = joblib.load("iris_model.pkl")
+
+new_data_point = [[0.5, 0.2, 2.0, 1.7]]
+prediction = loaded_model.predict(new_data_point)
+
+print(f"Prediction for new data point: {prediction}")
